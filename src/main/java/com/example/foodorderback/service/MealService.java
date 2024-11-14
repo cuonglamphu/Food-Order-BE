@@ -19,6 +19,5 @@ public interface MealService {
 	Meal findOne(Long id);
 	String editMeal(Meal meal);
 	List<MealDTO> getMealsByMealTypeId(Long id);
-	
-
+	MealDTO getMealById(Long id);
 }

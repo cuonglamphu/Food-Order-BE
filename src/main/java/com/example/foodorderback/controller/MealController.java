@@ -6,8 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tomcat.util.json.JSONParser;
-import org.json.simple.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -88,4 +87,15 @@ public class MealController {
 		return new ResponseEntity<String>(responseToClient, HttpStatus.OK);
 	}
 
+
+	@CrossOrigin(origins = "http://localhost:3000")
+	@RequestMapping(value = "/getMealById/{id}")
+	public ResponseEntity<MealDTO> getMealById(@PathVariable Long id) {
+		MealDTO mealDTO = mealService.getMealById(id);
+		if (mealDTO != null) {
+			return new ResponseEntity<>(mealDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 }

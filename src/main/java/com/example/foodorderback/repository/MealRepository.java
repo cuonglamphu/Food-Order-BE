@@ -9,3 +9,5 @@ import com.example.foodorderback.model.Meal;
 public interface MealRepository extends JpaRepository<Meal, Long> {
 
 }
+
+
