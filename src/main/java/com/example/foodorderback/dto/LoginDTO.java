@@ -16,7 +16,6 @@ public class LoginDTO {
 		super();
 		this.token = token;
 		this.message = message;
-		
 	}
 
 	public String getMessage() {

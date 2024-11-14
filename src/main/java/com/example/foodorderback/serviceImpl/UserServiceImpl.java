@@ -299,16 +299,10 @@ public class UserServiceImpl implements UserService {
 	public LoginDTO generateToken(Login login) {
 		LoginDTO loginDTO = new LoginDTO();
 		User user = new User();
-		
 		try {
-//			authenticationManager.authenticate(
-//					new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
 			User userFromDB = findByUsername(login.getUsername());
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			//poredi se i enkriptovane lozinke i one koje nisu, jer kada sam dodavao rucno user-e u bazi da bih testirao, lozinke nisu enkriptovane bile, jedino zato radim i tu proveru
-			//ako nisu iste lozinke (plain text iz input-a i u bazi, odnosno ona koja nije kriptovana, proveri dalje
 			if(!(userFromDB.getPassword().equals(login.getPassword()))) {
-				//proveri da li se enkriptovane lozinke podudaraju
 				if(encoder.matches(login.getPassword(), userFromDB.getPassword()) == false) {
 					throw new Exception();
 				}
@@ -316,6 +310,8 @@ public class UserServiceImpl implements UserService {
 					JWTLogin jwtDetails = new JWTLogin();
 					jwtDetails.setRole(userFromDB.getRole().toString());
 					jwtDetails.setUsername(userFromDB.getUsername());
+					jwtDetails.setFirstName(userFromDB.getFirstName());
+					jwtDetails.setLastName(userFromDB.getLastName());
 					String token = jwtUtil.generateToken(jwtDetails);
 					loginDTO = new LoginDTO(token, "success");
 				}
@@ -324,6 +320,8 @@ public class UserServiceImpl implements UserService {
 				JWTLogin jwtDetails = new JWTLogin();
 				jwtDetails.setRole(userFromDB.getRole().toString());
 				jwtDetails.setUsername(userFromDB.getUsername());
+				jwtDetails.setFirstName(userFromDB.getFirstName());
+				jwtDetails.setLastName(userFromDB.getLastName());
 				String token = jwtUtil.generateToken(jwtDetails);
 				loginDTO = new LoginDTO(token, "success");
 			}	
@@ -362,9 +360,8 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-	
-		//proveravaju se plain text sifre u bazi takodje jer nalozi za testiranje koje sam napravio na pocetku
-		//nemaju enkriptovane sifre. Sifre se enkriptuju nakon registracije korisnika i tako se cuvaju u bazi
+
+
 		if(!(loggedUser.getPassword().equals(passwordDTO.getOldPassword()))) {
 			//proveri da li se enkriptovane lozinke podudaraju
 			if(encoder.matches(passwordDTO.getOldPassword(), loggedUser.getPassword()) == false) {
@@ -383,8 +380,8 @@ public class UserServiceImpl implements UserService {
 			userRepository.save(loggedUser);
 			return "success";
 			}
-		
+
 	}
-	
-	
+
+
 }
